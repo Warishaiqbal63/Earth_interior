@@ -74,7 +74,7 @@ export async function removeSampleProductsAction(): Promise<ActionResult<{ remov
 }
 
 /** Creates (no id) or updates a product. Input is the JSON the product form builds. */
-export async function saveProductAction(id: number | null, input: unknown): Promise<ActionResult<{ id: number; slug: string }>> {
+export async function saveProductAction(id: number | null, input: unknown): Promise<ActionResult<{ id: number; slug: string; updatedAt: string | null }>> {
   if (!(await requireAdmin())) return UNAUTHORIZED;
   const result = validateProduct(input);
   if (!result.ok) {
@@ -100,8 +100,20 @@ export async function saveProductAction(id: number | null, input: unknown): Prom
     }
 
     let savedId: number;
+    let updatedAt: string | null = null;
     if (existing) {
-      if (!(await updateProduct(existing.id, value))) return NOT_FOUND;
+      const loadedAt = String((input as Record<string, unknown>)?.loadedAt ?? "");
+      const saved = await updateProduct(existing.id, value, loadedAt || existing.updatedAt);
+      if (saved === null) return NOT_FOUND;
+      if (saved === "conflict") {
+        return {
+          ok: false,
+          reason: "conflict",
+          message:
+            "This product was changed in another tab since you opened it. Copy anything you need, then reload the page to see the latest version.",
+        };
+      }
+      updatedAt = saved;
       savedId = existing.id;
       const kept = new Set(value.images.map((i) => i.url));
       await deleteProductImages(existing.images.filter((i) => !kept.has(i.url)));
@@ -109,7 +121,7 @@ export async function saveProductAction(id: number | null, input: unknown): Prom
       savedId = await createProduct(value);
     }
     changed();
-    return { ok: true, id: savedId, slug: value.slug };
+    return { ok: true, id: savedId, slug: value.slug, updatedAt };
   } catch (e) {
     console.error(e);
     if (String(e).includes("products_slug_key")) {

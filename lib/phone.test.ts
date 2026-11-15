@@ -15,4 +15,8 @@ test("rejects junk", () => {
   assert.equal(normalizePkPhone("abc"), null);
   assert.equal(normalizePkPhone(""), null);
   assert.equal(normalizePkPhone("+1 415 555 0100"), null);
+  // mobile numbers (3xx) must have 10 national digits
+  assert.equal(normalizePkPhone("0300 123456"), null);
+  assert.equal(normalizePkPhone("+92 300 123456"), null);
+  assert.equal(normalizePkPhone("0300 12345678"), null);
 });

@@ -79,17 +79,23 @@ export async function createProduct(p: ProductInput): Promise<number> {
   return Number(rows[0].id);
 }
 
-/** Returns false when the product no longer exists. */
-export async function updateProduct(id: number, p: ProductInput): Promise<boolean> {
+/**
+ * Saves only if the product is unchanged since `loadedAt` (the updatedAt the form was opened with),
+ * so an old tab or restored draft can't overwrite newer edits.
+ * Returns the new updatedAt, "conflict" when it changed meanwhile, or null when it no longer exists.
+ */
+export async function updateProduct(id: number, p: ProductInput, loadedAt: string): Promise<string | "conflict" | null> {
   const rows = await db()`
     UPDATE products SET
       title = ${p.title}, slug = ${p.slug}, category = ${p.category}, price = ${p.price},
       compare_at_price = ${p.compareAtPrice}, description = ${p.description}, dimensions = ${p.dimensions},
       features = ${JSON.stringify(p.features)}::jsonb, images = ${JSON.stringify(p.images)}::jsonb,
       published = ${p.published}, is_sample = FALSE, updated_at = now()
-    WHERE id = ${id}
-    RETURNING id`;
-  return rows.length > 0;
+    WHERE id = ${id} AND date_trunc('milliseconds', updated_at) = ${loadedAt}::timestamptz
+    RETURNING updated_at`;
+  if (rows[0]) return new Date(rows[0].updated_at as string).toISOString();
+  const exists = await db()`SELECT 1 FROM products WHERE id = ${id}`;
+  return exists.length ? "conflict" : null;
 }
 
 /** Deletes the product and returns its images so the caller can remove the files. */

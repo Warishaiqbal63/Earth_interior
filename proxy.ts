@@ -5,6 +5,9 @@ import { SESSION_COOKIE, verifySession } from "@/lib/auth/session";
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   if (pathname === "/admin/login") return NextResponse.next();
+  // Only redirect page loads. Saves (server-action POSTs) must reach the action, which checks the
+  // session itself and answers "signed out" so the form can keep the person's unsaved changes.
+  if (request.method !== "GET" && request.method !== "HEAD") return NextResponse.next();
 
   const session = await verifySession(request.cookies.get(SESSION_COOKIE)?.value);
   if (session) return NextResponse.next();

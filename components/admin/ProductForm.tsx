@@ -24,6 +24,8 @@ type FormState = {
   description: string;
   published: boolean;
   images: ImageItem[];
+  /** updatedAt of the version this form was opened from; the server rejects saves over newer edits. */
+  loadedAt: string;
 };
 
 function fromProduct(p: Product | null): FormState {
@@ -31,6 +33,7 @@ function fromProduct(p: Product | null): FormState {
     title: p?.title ?? "",
     slug: p?.slug ?? "",
     slugTouched: Boolean(p),
+    loadedAt: p?.updatedAt ?? "",
     category: p?.category ?? "",
     price: p?.price ? String(p.price) : "",
     compareAtPrice: p?.compareAtPrice ? String(p.compareAtPrice) : "",
@@ -44,7 +47,7 @@ function fromProduct(p: Product | null): FormState {
 
 /** Comparable snapshot: ignores transient upload fields. */
 const snapshot = (f: FormState) =>
-  JSON.stringify({ ...f, slugTouched: undefined, images: f.images.map(({ url, alt }) => ({ url, alt })) });
+  JSON.stringify({ ...f, slugTouched: undefined, loadedAt: undefined, images: f.images.map(({ url, alt }) => ({ url, alt })) });
 
 const noopSubscribe = () => () => {};
 function readDraft(key: string): string | null {
@@ -135,12 +138,13 @@ export function ProductForm({ product, storageReady }: { product: Product | null
           features: form.features,
           description: form.description,
           published: form.published,
+          loadedAt: form.loadedAt,
           images: form.images.filter((i) => i.status === "done").map(({ url, alt, width, height }) => ({ url, alt, width, height })),
         });
         if (res.ok) {
           setErrors({});
           setSignedOut(false);
-          const after = { ...form, slug: res.slug, images: form.images.filter((i) => i.status === "done") };
+          const after = { ...form, slug: res.slug, loadedAt: res.updatedAt ?? form.loadedAt, images: form.images.filter((i) => i.status === "done") };
           setForm(after);
           setSaved(snapshot(after));
           try {

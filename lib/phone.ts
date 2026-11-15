@@ -10,6 +10,7 @@ export function normalizePkPhone(raw: string): string | null {
   if (!digits.startsWith("92")) return null;
   const national = digits.slice(2);
   if (national.length < 9 || national.length > 10 || national.startsWith("0")) return null;
+  if (national.startsWith("3") && national.length !== 10) return null; // mobiles: 3xx + 7 digits
   return `+${digits}`;
 }
 

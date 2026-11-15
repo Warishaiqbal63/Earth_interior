@@ -2,7 +2,7 @@ export type ActionResult<T = object> =
   | ({ ok: true } & T)
   | {
       ok: false;
-      reason: "unauthorized" | "invalid" | "not-found" | "error";
+      reason: "unauthorized" | "invalid" | "not-found" | "conflict" | "error";
       message: string;
       errors?: Record<string, string>;
     };
