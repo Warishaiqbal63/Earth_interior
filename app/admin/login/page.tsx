@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import { LoginForm } from "./login-form";
 
@@ -20,9 +21,9 @@ export default function LoginPage() {
           </Suspense>
         </div>
         <p className="mt-6 text-center text-sm">
-          <a href="/" className="text-muted underline-offset-4 hover:text-primary hover:underline">
+          <Link href="/" className="text-muted underline-offset-4 hover:text-primary hover:underline">
             ← Back to the website
-          </a>
+          </Link>
         </p>
       </div>
     </main>
