@@ -26,8 +26,8 @@ export default async function ProductsPage({ searchParams }: { searchParams: SP 
         </Link>
       </div>
 
-      <form method="get" className="mt-6 grid gap-3 sm:grid-cols-[1fr_auto_auto_auto]" role="search">
-        <div className="relative">
+      <form method="get" className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-[1fr_auto_auto_auto]" role="search">
+        <div className="relative col-span-2 sm:col-span-1">
           <label htmlFor="q" className="sr-only">Search products</label>
           <Search size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
           <input id="q" name="q" type="search" defaultValue={q} placeholder="Search by name" className="input pl-10" />
@@ -45,7 +45,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: SP 
           <option value="published">On website</option>
           <option value="hidden">Hidden</option>
         </select>
-        <button type="submit" className="btn btn-outline">Filter</button>
+        <button type="submit" className="btn btn-outline col-span-2 sm:col-span-1">Filter</button>
       </form>
 
       {filtered && (
@@ -84,3 +84,6 @@ export default async function ProductsPage({ searchParams }: { searchParams: SP 
     </>
   );
 }
+
+// Admin pages always read live data; they block on the server instead of prerendering a shell.
+export const instant = false;

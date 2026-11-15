@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useId } from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { submitLead, type LeadState } from "@/app/(site)/actions";
 
 export function CallbackForm({ productId, productTitle, className = "" }: { productId?: number; productTitle?: string; className?: string }) {
   const [state, action, pending] = useActionState<LeadState, FormData>(submitLead, { status: "idle" });
-  const idp = productId ? `-${productId}` : "";
+  const idp = useId();
 
   if (state.status === "sent") {
     return (

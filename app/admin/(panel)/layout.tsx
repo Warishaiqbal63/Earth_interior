@@ -32,7 +32,7 @@ async function Panel({ children }: { children: React.ReactNode }) {
   if (!admin) redirect("/admin/login");
   const [openLeads, settings] = await Promise.all([countOpenLeads(), readSettings()]);
   return (
-    <div className="flex flex-1 bg-ground md:min-h-dvh">
+    <div className="flex flex-1 flex-col bg-ground md:min-h-dvh md:flex-row">
       <AdminNav openLeads={openLeads} businessName={settings.businessName} email={admin.email} />
       <div className="min-w-0 flex-1 pb-24 md:pb-10">
         <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 md:py-10">{children}</div>

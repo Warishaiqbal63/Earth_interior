@@ -36,3 +36,6 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     </>
   );
 }
+
+// Admin pages always read live data; they block on the server instead of prerendering a shell.
+export const instant = false;

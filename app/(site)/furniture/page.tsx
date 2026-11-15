@@ -73,7 +73,7 @@ async function Catalog({ searchParams }: { searchParams: SP }) {
       </p>
 
       <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" role="list">
+        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden" role="list">
           <FilterChip href={href(null)} active={!category} label="All" />
           {available.map((c) => (
             <FilterChip key={c} href={href(c)} active={category === c} label={c} />

@@ -52,3 +52,6 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
     </>
   );
 }
+
+// Admin pages always read live data; they block on the server instead of prerendering a shell.
+export const instant = false;

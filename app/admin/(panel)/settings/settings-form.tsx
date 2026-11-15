@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition, type ReactNode } from "react";
+import { useId, useMemo, useState, useTransition, type ReactNode } from "react";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import type { Settings } from "@/lib/types";
 import { saveSettingsAction } from "@/app/admin/actions/settings";
@@ -11,6 +11,8 @@ type Form = Omit<Settings, "trustPoints"> & { trustPoints: string };
 
 export function SettingsForm({ initial }: { initial: Settings }) {
   const start0 = useMemo<Form>(() => ({ ...initial, trustPoints: initial.trustPoints.join("\n") }), [initial]);
+  const uid = useId();
+  const sid = (name: string) => uid + "s-" + name;
   const [form, setForm] = useState<Form>(start0);
   const [saved, setSaved] = useState(JSON.stringify(start0));
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -34,7 +36,7 @@ export function SettingsForm({ initial }: { initial: Settings }) {
           toast(res.message, "error");
           if (res.errors) {
             const first = Object.keys(res.errors)[0];
-            document.getElementById(`s-${first}`)?.focus();
+            document.getElementById(sid(first))?.focus();
           }
         }
       } catch {
@@ -45,9 +47,9 @@ export function SettingsForm({ initial }: { initial: Settings }) {
 
   const text = (key: keyof Form & string, label: string, opts: { hint?: string; type?: string; placeholder?: string; inputMode?: "tel" } = {}) => (
     <div>
-      <label htmlFor={`s-${key}`} className="label">{label}</label>
+      <label htmlFor={sid(key)} className="label">{label}</label>
       <input
-        id={`s-${key}`}
+        id={sid(key)}
         type={opts.type ?? "text"}
         inputMode={opts.inputMode}
         placeholder={opts.placeholder}
@@ -84,7 +86,7 @@ export function SettingsForm({ initial }: { initial: Settings }) {
 
       <Section title="Why choose us" description="Short promises shown in the hero and on product pages. One per line, up to 6.">
         <textarea
-          id="s-trustPoints"
+          id={sid("trustPoints")}
           rows={5}
           value={form.trustPoints}
           onChange={(e) => set("trustPoints", e.target.value)}

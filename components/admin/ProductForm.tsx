@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore, useTransition } from "react";
+import { useEffect, useId, useMemo, useState, useSyncExternalStore, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, ExternalLink, Loader2 } from "lucide-react";
@@ -62,6 +62,9 @@ const toNumber = (s: string) => {
 
 export function ProductForm({ product, storageReady }: { product: Product | null; storageReady: boolean }) {
   const router = useRouter();
+  // Unique per form instance: Next keeps visited pages mounted (hidden), so fixed ids would repeat.
+  const uid = useId();
+  const fid = (name: string) => uid + "f-" + name;
   const draftKey = `ei-draft-${product?.id ?? "new"}`;
   const initial = useMemo(() => fromProduct(product), [product]);
   const [form, setForm] = useState<FormState>(initial);
@@ -151,7 +154,7 @@ export function ProductForm({ product, storageReady }: { product: Product | null
         setErrors(res.errors ?? {});
         toast(res.message, "error");
         const first = res.errors && Object.keys(res.errors)[0];
-        if (first) document.getElementById(`f-${first.startsWith("images") ? "images" : first}`)?.focus();
+        if (first) document.getElementById(fid(first.startsWith("images") ? "images" : first))?.focus();
       } catch {
         toast("Couldn't reach the server. Check your connection; your changes are still here.", "error");
       }
@@ -189,7 +192,7 @@ export function ProductForm({ product, storageReady }: { product: Product | null
 
       <section className="card space-y-4 p-5 sm:p-6">
         <h2 className="font-sans text-base font-semibold">Photos</h2>
-        <div id="f-images" tabIndex={-1}>
+        <div id={fid("images")} tabIndex={-1}>
           <ImageManager
             items={form.images}
             onChange={(update) => setForm((f) => ({ ...f, images: update(f.images) }))}
@@ -203,16 +206,16 @@ export function ProductForm({ product, storageReady }: { product: Product | null
       <section className="card space-y-4 p-5 sm:p-6">
         <h2 className="font-sans text-base font-semibold">Details</h2>
         <div>
-          <label htmlFor="f-title" className="label">Product name</label>
-          <input id="f-title" value={form.title} onChange={(e) => set("title", e.target.value)} placeholder="e.g. Walnut King Bed with Storage" aria-invalid={!!errors.title} className="input" />
+          <label htmlFor={fid("title")} className="label">Product name</label>
+          <input id={fid("title")} value={form.title} onChange={(e) => set("title", e.target.value)} placeholder="e.g. Walnut King Bed with Storage" aria-invalid={!!errors.title} className="input" />
           {err("title")}
         </div>
         <div>
-          <label htmlFor="f-slug" className="label">Web address</label>
+          <label htmlFor={fid("slug")} className="label">Web address</label>
           <div className="flex items-center rounded-lg border border-line bg-ground pl-3 text-sm text-muted focus-within:border-primary">
             <span className="shrink-0">/furniture/</span>
             <input
-              id="f-slug"
+              id={fid("slug")}
               value={form.slug}
               onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value, slugTouched: true }))}
               onBlur={() => setForm((f) => ({ ...f, slug: f.slug ? slugify(f.slug) : slugify(f.title) }))}
@@ -223,8 +226,8 @@ export function ProductForm({ product, storageReady }: { product: Product | null
           {errors.slug ? err("slug") : <p className="hint">Filled in from the name. Changing it later breaks old shared links.</p>}
         </div>
         <div>
-          <label htmlFor="f-category" className="label">Category</label>
-          <select id="f-category" value={form.category} onChange={(e) => set("category", e.target.value)} aria-invalid={!!errors.category} className="input">
+          <label htmlFor={fid("category")} className="label">Category</label>
+          <select id={fid("category")} value={form.category} onChange={(e) => set("category", e.target.value)} aria-invalid={!!errors.category} className="input">
             <option value="" disabled>Choose a category</option>
             {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
@@ -232,28 +235,28 @@ export function ProductForm({ product, storageReady }: { product: Product | null
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="f-price" className="label">Price in rupees <span className="font-normal text-muted">(optional)</span></label>
-            <input id="f-price" inputMode="numeric" value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="125,000" aria-invalid={!!errors.price} className="input" />
+            <label htmlFor={fid("price")} className="label">Price in rupees <span className="font-normal text-muted">(optional)</span></label>
+            <input id={fid("price")} inputMode="numeric" value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="125,000" aria-invalid={!!errors.price} className="input" />
             {errors.price ? err("price") : <p className="hint">Leave empty to show “Price on request”.</p>}
           </div>
           <div>
-            <label htmlFor="f-compareAtPrice" className="label">Old price <span className="font-normal text-muted">(optional)</span></label>
-            <input id="f-compareAtPrice" inputMode="numeric" value={form.compareAtPrice} onChange={(e) => set("compareAtPrice", e.target.value)} placeholder="150,000" aria-invalid={!!errors.compareAtPrice} className="input" />
+            <label htmlFor={fid("compareAtPrice")} className="label">Old price <span className="font-normal text-muted">(optional)</span></label>
+            <input id={fid("compareAtPrice")} inputMode="numeric" value={form.compareAtPrice} onChange={(e) => set("compareAtPrice", e.target.value)} placeholder="150,000" aria-invalid={!!errors.compareAtPrice} className="input" />
             {errors.compareAtPrice ? err("compareAtPrice") : <p className="hint">{off ? `Shows as ${off}% off.` : "Only for a discount. Shown crossed out."}</p>}
           </div>
         </div>
         <div>
-          <label htmlFor="f-dimensions" className="label">Size <span className="font-normal text-muted">(optional)</span></label>
-          <input id="f-dimensions" value={form.dimensions} onChange={(e) => set("dimensions", e.target.value)} placeholder="e.g. 78 × 84 in, or Built to your wall size" className="input" />
+          <label htmlFor={fid("dimensions")} className="label">Size <span className="font-normal text-muted">(optional)</span></label>
+          <input id={fid("dimensions")} value={form.dimensions} onChange={(e) => set("dimensions", e.target.value)} placeholder="e.g. 78 × 84 in, or Built to your wall size" className="input" />
         </div>
         <div>
-          <label htmlFor="f-features" className="label">Key features <span className="font-normal text-muted">(one per line)</span></label>
-          <textarea id="f-features" rows={4} value={form.features} onChange={(e) => set("features", e.target.value)} placeholder={"Solid sheesham wood\nHydraulic storage\nChoice of fabric"} aria-invalid={!!errors.features} className="input" />
+          <label htmlFor={fid("features")} className="label">Key features <span className="font-normal text-muted">(one per line)</span></label>
+          <textarea id={fid("features")} rows={4} value={form.features} onChange={(e) => set("features", e.target.value)} placeholder={"Solid sheesham wood\nHydraulic storage\nChoice of fabric"} aria-invalid={!!errors.features} className="input" />
           {err("features")}
         </div>
         <div>
-          <label htmlFor="f-description" className="label">Description <span className="font-normal text-muted">(optional)</span></label>
-          <textarea id="f-description" rows={5} value={form.description} onChange={(e) => set("description", e.target.value)} aria-invalid={!!errors.description} className="input" />
+          <label htmlFor={fid("description")} className="label">Description <span className="font-normal text-muted">(optional)</span></label>
+          <textarea id={fid("description")} rows={5} value={form.description} onChange={(e) => set("description", e.target.value)} aria-invalid={!!errors.description} className="input" />
           {errors.description ? err("description") : <p className="hint">Mention the wood, finish and what can be customised. The first sentence appears in Google.</p>}
         </div>
         <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-line p-3">

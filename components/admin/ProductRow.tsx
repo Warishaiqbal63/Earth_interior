@@ -29,7 +29,7 @@ export function ProductRow({ product, isFirst, isLast, canReorder }: Props) {
   const move = (dir: "up" | "down") => start(async () => void (await runAction(() => moveProductAction(product.id, dir))));
 
   return (
-    <li className={`flex items-center gap-3 p-3 sm:gap-4 sm:p-4 ${pending ? "opacity-70" : ""}`}>
+    <li className={`flex flex-wrap items-center gap-3 p-3 sm:flex-nowrap sm:gap-4 sm:p-4 ${pending ? "opacity-70" : ""}`}>
       <div className="relative h-16 w-14 shrink-0 overflow-hidden rounded-md bg-accent-soft sm:h-20 sm:w-16">
         {cover ? (
           <Image src={cover.url} alt="" fill sizes="64px" className="object-cover" />
@@ -56,7 +56,7 @@ export function ProductRow({ product, isFirst, isLast, canReorder }: Props) {
           {!cover && <span className="rounded-full bg-danger-soft px-2 py-0.5 text-xs font-medium text-danger">No photo</span>}
         </div>
       </div>
-      <div className="flex shrink-0 flex-wrap items-center justify-end gap-1">
+      <div className="flex w-full shrink-0 items-center justify-end gap-1 border-t border-line pt-2 sm:w-auto sm:border-0 sm:pt-0">
         {canReorder && (
           <>
             <button type="button" className="btn btn-sm btn-ghost px-2" onClick={() => move("up")} disabled={isFirst || pending} aria-label={`Move ${product.title} up`}>

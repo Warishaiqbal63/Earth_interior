@@ -78,3 +78,6 @@ function Stat({ label, value, href, highlight = false }: { label: string; value:
     </Link>
   );
 }
+
+// Admin pages always read live data; they block on the server instead of prerendering a shell.
+export const instant = false;
