@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { validateLead, validateProduct, validateSettings } from "./validate.ts";
 import { DEFAULT_SETTINGS } from "./types.ts";
 
-const img = { url: "https://abc.public.blob.vercel-storage.com/a.webp", alt: "Oak bed", width: 800, height: 600 };
+process.env.AWS_ENDPOINT_URL_S3 = "https://storage.example.neon.tech";
+const img = { url: "https://storage.example.neon.tech/product-images/products/a.webp", alt: "Oak bed", width: 800, height: 600 };
 
 test("product: required title, compare-at above price", () => {
   const r = validateProduct({ title: "", category: "Bedroom", price: "5000", compareAtPrice: "4000", images: [] });
@@ -18,6 +19,9 @@ test("product: bad category, missing alt, foreign image host", () => {
   assert.equal(validateProduct({ title: "Bed", category: "Garage", images: [] }).ok, false);
   assert.equal(validateProduct({ title: "Bed", category: "Bedroom", images: [{ ...img, alt: "" }] }).ok, false);
   assert.equal(validateProduct({ title: "Bed", category: "Bedroom", images: [{ ...img, url: "https://evil.com/a.webp" }] }).ok, false);
+  assert.equal(validateProduct({ title: "Bed", category: "Bedroom", images: [{ ...img, url: "https://storage.example.neon.tech/other-bucket/a.webp" }] }).ok, false);
+  assert.equal(validateProduct({ title: "Bed", category: "Bedroom", images: [{ ...img, url: "https://storage.example.neon.tech.evil.com/product-images/a.webp" }] }).ok, false);
+  assert.equal(validateProduct({ title: "Bed", category: "Bedroom", images: [{ ...img, url: "/samples/arlo-bed.webp" }] }).ok, true);
   assert.equal(validateProduct({ title: "Bed", category: "Bedroom", images: Array(9).fill(img) }).ok, false);
 });
 

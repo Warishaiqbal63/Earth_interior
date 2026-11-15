@@ -23,11 +23,18 @@ function parsePrice(v: unknown): number | null | "invalid" {
   return n > 0 && n <= MAX_PRICE ? n : "invalid";
 }
 
+/** Neon Object Storage bucket that holds product photos (declared in neon.ts). */
+export const IMAGE_BUCKET = "product-images";
+
+/** Only our sample photos or files in our own public bucket may be attached to a product. */
 export function isAllowedImageUrl(url: string): boolean {
   if (url.startsWith("/samples/")) return /^\/samples\/[a-z0-9-]+\.(webp|jpg|jpeg|png)$/.test(url);
+  const endpoint = process.env.AWS_ENDPOINT_URL_S3;
+  if (!endpoint) return false;
   try {
     const u = new URL(url);
-    return u.protocol === "https:" && u.hostname.endsWith(".public.blob.vercel-storage.com");
+    const base = new URL(endpoint);
+    return u.protocol === "https:" && u.host === base.host && u.pathname.startsWith(`/${IMAGE_BUCKET}/products/`);
   } catch {
     return false;
   }

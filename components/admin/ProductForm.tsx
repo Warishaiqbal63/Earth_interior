@@ -60,7 +60,7 @@ const toNumber = (s: string) => {
   return Number.isFinite(n) && n > 0 ? n : null;
 };
 
-export function ProductForm({ product, blobReady }: { product: Product | null; blobReady: boolean }) {
+export function ProductForm({ product, storageReady }: { product: Product | null; storageReady: boolean }) {
   const router = useRouter();
   const draftKey = `ei-draft-${product?.id ?? "new"}`;
   const initial = useMemo(() => fromProduct(product), [product]);
@@ -194,7 +194,7 @@ export function ProductForm({ product, blobReady }: { product: Product | null; b
             items={form.images}
             onChange={(update) => setForm((f) => ({ ...f, images: update(f.images) }))}
             defaultAlt={form.title}
-            blobReady={blobReady}
+            storageReady={storageReady}
             errors={errors}
           />
         </div>

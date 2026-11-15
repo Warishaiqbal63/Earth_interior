@@ -2,12 +2,53 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { upload } from "@vercel/blob/client";
 import { AlertCircle, ArrowLeft, ArrowRight, ImagePlus, Loader2, RotateCw, Star, Trash2 } from "lucide-react";
-import { checkImageFile } from "@/lib/upload-rules";
+import { checkImageFile, MAX_IMAGE_EDGE, MAX_UPLOAD_BYTES } from "@/lib/upload-rules";
 import { MAX_IMAGES } from "@/lib/validate";
-import { slugify } from "@/lib/slug";
 import type { ProductImage } from "@/lib/types";
+
+/** Shrinks a photo to MAX_IMAGE_EDGE on its longest side and re-encodes it (WebP, JPEG fallback). */
+async function shrink(file: File): Promise<{ blob: Blob; width: number; height: number }> {
+  const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+  const scale = Math.min(1, MAX_IMAGE_EDGE / Math.max(bitmap.width, bitmap.height));
+  const width = Math.round(bitmap.width * scale);
+  const height = Math.round(bitmap.height * scale);
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("decode");
+  ctx.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close();
+  const encode = (type: string, q: number) =>
+    new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, q));
+  let blob = await encode("image/webp", 0.85);
+  if (!blob || blob.type !== "image/webp") blob = await encode("image/jpeg", 0.85); // browsers without WebP encoding
+  if (!blob) throw new Error("decode");
+  if (blob.size > MAX_UPLOAD_BYTES) blob = (await encode(blob.type, 0.7)) ?? blob;
+  return { blob, width, height };
+}
+
+/** Uploads with XMLHttpRequest so we can show real progress on slow mobile connections. */
+function post(blob: Blob, onProgress: (pct: number) => void): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const form = new FormData();
+    form.append("file", blob, blob.type === "image/webp" ? "photo.webp" : "photo.jpg");
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/upload");
+    xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(Math.round((e.loaded / e.total) * 100));
+    xhr.onload = () => {
+      let body: { url?: string; error?: string } = {};
+      try {
+        body = JSON.parse(xhr.responseText);
+      } catch {}
+      if (xhr.status >= 200 && xhr.status < 300 && body.url) resolve(body.url);
+      else reject(new Error(body.error || "Upload failed. Check your connection and retry."));
+    };
+    xhr.onerror = () => reject(new Error("Upload failed. Check your connection and retry."));
+    xhr.send(form);
+  });
+}
 
 export type ImageItem = ProductImage & {
   key: string;
@@ -22,7 +63,7 @@ type Props = {
   items: ImageItem[];
   onChange: (update: (items: ImageItem[]) => ImageItem[]) => void;
   defaultAlt: string;
-  blobReady: boolean;
+  storageReady: boolean;
   errors: Record<string, string>;
 };
 
@@ -42,7 +83,7 @@ function readSize(file: File): Promise<{ width: number; height: number }> {
   });
 }
 
-export function ImageManager({ items, onChange, defaultAlt, blobReady, errors }: Props) {
+export function ImageManager({ items, onChange, defaultAlt, storageReady, errors }: Props) {
   const input = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -52,24 +93,18 @@ export function ImageManager({ items, onChange, defaultAlt, blobReady, errors }:
   async function send(item: ImageItem) {
     if (!item.file) return;
     patch(item.key, { status: "uploading", progress: 0, error: undefined });
+    let shrunk: Awaited<ReturnType<typeof shrink>>;
     try {
-      const ext = item.file.type.split("/")[1] === "jpeg" ? "jpg" : item.file.type.split("/")[1];
-      const base = slugify(item.file.name.replace(/\.[^.]+$/, "")).slice(0, 40);
-      const blob = await upload(`products/${base}.${ext}`, item.file, {
-        access: "public",
-        handleUploadUrl: "/api/blob-upload",
-        contentType: item.file.type,
-        onUploadProgress: ({ percentage }) => patch(item.key, { progress: Math.round(percentage) }),
-      });
-      patch(item.key, { status: "done", url: blob.url, progress: 100, file: undefined });
+      shrunk = await shrink(item.file);
+    } catch {
+      patch(item.key, { status: "error", error: "This photo couldn't be read. Try saving it as a JPG first." });
+      return;
+    }
+    try {
+      const url = await post(shrunk.blob, (progress) => patch(item.key, { progress }));
+      patch(item.key, { status: "done", url, width: shrunk.width, height: shrunk.height, progress: 100, file: undefined });
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "";
-      patch(item.key, {
-        status: "error",
-        error: /signed out|401/i.test(msg)
-          ? "You were signed out. Sign in again in a new tab, then retry."
-          : "Upload failed. Check your connection and retry.",
-      });
+      patch(item.key, { status: "error", error: e instanceof Error ? e.message : "Upload failed. Retry." });
     }
   }
 
@@ -117,7 +152,7 @@ export function ImageManager({ items, onChange, defaultAlt, blobReady, errors }:
 
   return (
     <div>
-      {!blobReady && (
+      {!storageReady && (
         <p className="mb-3 flex gap-2 rounded-lg bg-accent-soft p-3 text-sm">
           <AlertCircle size={18} className="mt-0.5 shrink-0 text-accent" aria-hidden />
           Image storage isn't connected yet, so new photos can't be uploaded. Existing photos and all other fields still save
@@ -192,26 +227,26 @@ export function ImageManager({ items, onChange, defaultAlt, blobReady, errors }:
         <div
           onDragOver={(e) => {
             e.preventDefault();
-            if (blobReady) setDragOver(true);
+            if (storageReady) setDragOver(true);
           }}
           onDragLeave={() => setDragOver(false)}
           onDrop={(e) => {
             e.preventDefault();
             setDragOver(false);
-            if (blobReady) void addFiles(e.dataTransfer.files);
+            if (storageReady) void addFiles(e.dataTransfer.files);
           }}
           className={`mt-3 rounded-xl border-2 border-dashed p-6 text-center transition-colors ${
             dragOver ? "border-primary bg-primary-soft" : "border-line bg-ground"
-          } ${blobReady ? "" : "opacity-60"}`}
+          } ${storageReady ? "" : "opacity-60"}`}
         >
           <ImagePlus size={28} className="mx-auto text-muted" aria-hidden />
           <p className="mt-2 text-sm">
-            <button type="button" className="font-semibold text-primary hover:underline disabled:no-underline" disabled={!blobReady} onClick={() => input.current?.click()}>
+            <button type="button" className="font-semibold text-primary hover:underline disabled:no-underline" disabled={!storageReady} onClick={() => input.current?.click()}>
               Choose photos
             </button>{" "}
             <span className="hidden sm:inline">or drag them here</span>
           </p>
-          <p className="mt-1 text-xs text-muted">JPG, PNG or WebP, up to 8 MB each. {MAX_IMAGES - items.length} more allowed. The first photo is the cover.</p>
+          <p className="mt-1 text-xs text-muted">JPG, PNG or WebP. Large photos are resized automatically. {MAX_IMAGES - items.length} more allowed. The first photo is the cover.</p>
           <input
             ref={input}
             type="file"

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Inbox, Plus } from "lucide-react";
 import { countOpenLeads, listLeads } from "@/lib/data/leads";
 import { countSampleProducts, productCounts } from "@/lib/data/products";
-import { blobConfigured } from "@/lib/blob";
+import { storageConfigured } from "@/lib/storage";
 import { LeadRow } from "@/components/admin/LeadRow";
 import { RemoveSamplesButton } from "@/components/admin/RemoveSamplesButton";
 
@@ -33,10 +33,10 @@ export default async function OverviewPage() {
         </div>
       )}
 
-      {!blobConfigured() && (
+      {!storageConfigured() && (
         <div className="mt-4 rounded-xl border border-line bg-surface p-4 text-sm">
-          <strong>Photo storage isn't connected yet.</strong> You can edit text and prices, but uploading photos needs Vercel
-          Blob to be connected to this project (see the setup guide).
+          <strong>Photo storage isn't connected yet.</strong> You can edit text and prices, but uploading photos needs Neon
+          Object Storage to be connected (see the README: "Photo storage").
         </div>
       )}
 

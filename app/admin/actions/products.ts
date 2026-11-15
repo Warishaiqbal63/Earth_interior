@@ -3,7 +3,7 @@
 import { refresh, updateTag } from "next/cache";
 import { requireAdmin, UNAUTHORIZED } from "@/lib/auth/require-admin";
 import { NOT_FOUND, SERVER_ERROR, type ActionResult } from "@/lib/action-result";
-import { deleteBlobImages } from "@/lib/blob";
+import { deleteProductImages } from "@/lib/storage";
 import { uniqueSlug } from "@/lib/slug";
 import { validateProduct } from "@/lib/validate";
 import {
@@ -51,7 +51,7 @@ export async function deleteProductAction(id: number): Promise<ActionResult> {
   try {
     const images = await deleteProduct(id);
     if (images === null) return NOT_FOUND;
-    await deleteBlobImages(images);
+    await deleteProductImages(images);
     changed();
     return { ok: true };
   } catch (e) {
@@ -64,7 +64,7 @@ export async function removeSampleProductsAction(): Promise<ActionResult<{ remov
   if (!(await requireAdmin())) return UNAUTHORIZED;
   try {
     const images = await deleteSampleProducts();
-    await deleteBlobImages(images);
+    await deleteProductImages(images);
     changed();
     return { ok: true, removed: images.length };
   } catch (e) {
@@ -104,7 +104,7 @@ export async function saveProductAction(id: number | null, input: unknown): Prom
       if (!(await updateProduct(existing.id, value))) return NOT_FOUND;
       savedId = existing.id;
       const kept = new Set(value.images.map((i) => i.url));
-      await deleteBlobImages(existing.images.filter((i) => !kept.has(i.url)));
+      await deleteProductImages(existing.images.filter((i) => !kept.has(i.url)));
     } else {
       savedId = await createProduct(value);
     }

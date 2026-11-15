@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+// Product photos are served from the Neon Object Storage endpoint (public bucket).
+const storage = process.env.AWS_ENDPOINT_URL_S3 ? new URL(process.env.AWS_ENDPOINT_URL_S3) : null;
+
 const nextConfig: NextConfig = {
   experimental: {
     agentFeedback: true,
@@ -7,7 +10,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   images: {
-    remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
+    remotePatterns: storage
+      ? [{ protocol: "https", hostname: storage.hostname, pathname: "/product-images/**" }]
+      : [],
   },
   turbopack: {
     rules: {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ProductForm } from "@/components/admin/ProductForm";
-import { blobConfigured } from "@/lib/blob";
+import { storageConfigured } from "@/lib/storage";
 
 export const metadata: Metadata = { title: "Add product" };
 
@@ -14,7 +14,7 @@ export default function NewProductPage() {
       </Link>
       <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">Add product</h1>
       <p className="mt-1 text-muted">Only the name and category are required. You can add photos and prices later.</p>
-      <ProductForm product={null} blobReady={blobConfigured()} />
+      <ProductForm product={null} storageReady={storageConfigured()} />
     </>
   );
 }

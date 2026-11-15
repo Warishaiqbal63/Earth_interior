@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ProductForm } from "@/components/admin/ProductForm";
 import { getProductById } from "@/lib/data/products";
-import { blobConfigured } from "@/lib/blob";
+import { storageConfigured } from "@/lib/storage";
 
 export const metadata: Metadata = { title: "Edit product" };
 
@@ -32,7 +32,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
           This is a sample product. Saving changes turns it into one of your own, so it won't be removed with the samples.
         </p>
       )}
-      <ProductForm key={product.updatedAt} product={product} blobReady={blobConfigured()} />
+      <ProductForm key={product.updatedAt} product={product} storageReady={storageConfigured()} />
     </>
   );
 }
