@@ -7,8 +7,8 @@ import { ContactButtons } from "@/components/site/ContactButtons";
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();
   return {
-    title: `Our Work: Kitchens and Furniture in ${s.city}`,
-    description: `Photos and videos of kitchens and furniture by ${s.businessName} in ${s.city}: finished projects, installations in progress and 3D designs.`,
+    title: `Our Work: Furniture and Interiors in ${s.city}`,
+    description: `Photos and videos of furniture, kitchens and interiors by ${s.businessName} in ${s.city}: finished projects, installations in progress and 3D designs.`,
     alternates: { canonical: "/portfolio" },
   };
 }
@@ -22,7 +22,7 @@ export default async function PortfolioPage() {
       </nav>
       <h1 className="mt-3 text-3xl font-semibold sm:text-4xl">Our work</h1>
       <p className="mt-2 max-w-2xl text-muted">
-        Real kitchens and furniture we've designed and installed in {settings.city}, including work in progress and the 3D
+        Real furniture, kitchens and interiors we've designed and installed in {settings.city}, including work in progress and the 3D
         designs we share before anything is built.
       </p>
       <div className="mt-8">

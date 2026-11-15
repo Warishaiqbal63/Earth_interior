@@ -7,9 +7,9 @@ import { displayPkPhone } from "@/lib/phone";
 import { CATEGORIES, type Product, type Settings } from "@/lib/types";
 
 const HERO_PHOTOS = [
-  { src: "/portfolio/dark-grey-kitchen-marble-backsplash.webp", alt: "Finished grey matte kitchen with black marble backsplash installed by Earth Interior" },
-  { src: "/portfolio/grey-kitchen-3d-design.webp", alt: "3D design of a grey and marble kitchen" },
+  { src: "/portfolio/wooden-coffered-ceiling.webp", alt: "Wooden coffered ceiling with pendant lamps by Earth Interior" },
   { src: "/portfolio/curved-three-seater-sofa.webp", alt: "Curved three-seater sofa in light grey fabric" },
+  { src: "/portfolio/dark-grey-kitchen-marble-backsplash.webp", alt: "Finished grey matte kitchen with black marble backsplash" },
 ];
 
 export function Hero({ settings }: { settings: Settings }) {
@@ -17,13 +17,13 @@ export function Hero({ settings }: { settings: Settings }) {
     <section className="relative overflow-hidden">
       <div className="container-page grid items-center gap-10 py-12 md:py-20 lg:grid-cols-[1.05fr_1fr]">
         <div>
-          <p className="eyebrow">Kitchens and furniture in {settings.city}</p>
+          <p className="eyebrow">Furniture and interiors in {settings.city}</p>
           <h1 className="mt-4 text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.5rem]">
-            Modern kitchens, designed and installed in 10 to 15 days.
+            Custom furniture and interiors, made for your home.
           </h1>
           <p className="mt-5 max-w-xl text-lg text-muted">
-            We design and install kitchens, wardrobes and custom furniture for homes in {settings.city}. See your kitchen in
-            3D first, choose your finishes, and get a price that fits your budget.
+            Sofas, beds, wardrobes, dining sets, kitchens and wooden ceilings, designed and built to your size and budget{" "}
+            in {settings.city}. See it in 3D first, choose your finishes, and get a clear price before we start.
           </p>
           <ContactButtons settings={settings} className="mt-8" showNumber />
           <ul className="mt-8 grid gap-3 text-sm sm:grid-cols-2">
@@ -52,9 +52,9 @@ export function Hero({ settings }: { settings: Settings }) {
 }
 
 const PROMISES = [
-  { icon: Clock, title: "Fast delivery", text: "Most kitchens are designed and installed in 10 to 15 days." },
-  { icon: Layers, title: "Premium finishes", text: "Branded boards, quality hardware and stone counters." },
-  { icon: Box, title: "See it in 3D first", text: "We share a 3D design of your kitchen before we build." },
+  { icon: Clock, title: "Fast delivery", text: "Kitchens in 10 to 15 days, and a clear agreed date for every order." },
+  { icon: Layers, title: "Premium finishes", text: "Quality boards, fabrics, solid wood and stone." },
+  { icon: Box, title: "See it in 3D first", text: "We share a 3D design before anything is built." },
   { icon: BadgeCheck, title: "Affordable prices", text: "A clear written quote that fits your budget." },
 ];
 
@@ -221,7 +221,7 @@ export function VisitUs({ settings }: { settings: Settings }) {
           <p className="eyebrow">Visit our office</p>
           <h2 className="mt-2 text-3xl font-semibold sm:text-4xl">Come and see the finishes</h2>
           <p className="mt-3 max-w-lg text-muted">
-            Visit our office to see finish samples and talk through your kitchen design. Call ahead so the right person is
+            Visit our office to see finish samples and talk through your design. Call ahead so the right person is
             there to help you.
           </p>
           <ul className="mt-6 space-y-4">

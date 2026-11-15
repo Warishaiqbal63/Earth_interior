@@ -13,10 +13,10 @@ import { PortfolioGallery } from "@/components/site/Portfolio";
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();
   return {
-    title: { absolute: `${s.businessName} | Modern Kitchens and Custom Furniture in ${s.city}` },
-    description: `Modern kitchens designed and installed in 10 to 15 days, plus wardrobes and custom furniture, in ${s.city}. Premium finishes at an affordable price. Call or WhatsApp ${s.businessName}.`,
+    title: { absolute: `${s.businessName} | Custom Furniture, Kitchens and Interiors in ${s.city}` },
+    description: `Custom sofas, beds, wardrobes, dining sets, kitchens and wooden ceilings in ${s.city}, made to your size and budget. Kitchens installed in 10 to 15 days. Call or WhatsApp ${s.businessName}.`,
     alternates: { canonical: "/" },
-    openGraph: { type: "website", siteName: s.businessName, title: `${s.businessName} | Kitchens and Furniture in ${s.city}`, images: [{ url: "/portfolio/dark-grey-kitchen-marble-backsplash.webp", width: 1600, height: 1200 }] },
+    openGraph: { type: "website", siteName: s.businessName, title: `${s.businessName} | Custom Furniture and Interiors in ${s.city}`, images: [{ url: "/portfolio/curved-three-seater-sofa.webp", width: 1600, height: 1200 }] },
   };
 }
 
@@ -33,8 +33,8 @@ export default async function HomePage() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Our work</p>
-            <h2 className="mt-2 text-3xl font-semibold sm:text-4xl">Kitchens we have built in {settings.city}</h2>
-            <p className="mt-2 max-w-2xl text-muted">Finished projects, work in progress and the 3D designs we share before we start.</p>
+            <h2 className="mt-2 text-3xl font-semibold sm:text-4xl">Projects we have completed in {settings.city}</h2>
+            <p className="mt-2 max-w-2xl text-muted">Sofas, chairs, kitchens and ceilings: finished projects, work in progress and the 3D designs we share before we start.</p>
           </div>
           <Link href="/portfolio" className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline sm:flex">
             See all <ArrowRight size={16} aria-hidden />

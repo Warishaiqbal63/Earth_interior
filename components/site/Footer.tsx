@@ -11,7 +11,7 @@ export function Footer({ settings }: { settings: Settings }) {
       <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
           <p className="font-display text-2xl font-semibold">{settings.businessName}</p>
-          <p className="mt-2 max-w-sm text-muted">{settings.tagline}. Kitchens, wardrobes and custom furniture, designed and installed for homes in {settings.city}.</p>
+          <p className="mt-2 max-w-sm text-muted">{settings.tagline}. Custom furniture, kitchens and interiors for homes in {settings.city}.</p>
           <ul className="mt-5 space-y-2 text-sm">
             <li className="flex gap-2">
               <MapPin size={16} className="mt-0.5 shrink-0 text-primary" aria-hidden />

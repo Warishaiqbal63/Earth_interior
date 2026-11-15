@@ -86,7 +86,7 @@ export type ValidationResult<T> =
 /** Starting content. Every field is editable in Admin → Settings. */
 export const DEFAULT_SETTINGS: Settings = {
   businessName: "Earth Interior",
-  tagline: "Beautiful kitchens. Fast delivery. Affordable prices.",
+  tagline: "Beautiful furniture. Fast delivery. Affordable prices.",
   city: "Karachi",
   phone: "+923333388646",
   whatsapp: "+923333388646",
@@ -98,9 +98,9 @@ export const DEFAULT_SETTINGS: Settings = {
   mapUrl: "https://maps.google.com/?q=7th+Zamzama+Commercial+Lane+DHA+Karachi",
   hours: "Monday to Saturday, 10am to 8pm",
   trustPoints: [
+    "Custom furniture made to your size and budget",
     "Kitchens designed and installed in 10 to 15 days",
     "Premium finishes at an affordable price",
-    "Built to your size, colour and budget",
     "Professional workmanship, start to finish",
   ],
   testimonials: [
@@ -116,8 +116,8 @@ export const DEFAULT_SETTINGS: Settings = {
       a: "Yes. Everything is made to order, so we can change size, wood, polish and fabric to fit your room.",
     },
     {
-      q: "How long does a kitchen take?",
-      a: "Most kitchens are designed and installed in 10 to 15 days once the design and quote are approved.",
+      q: "How long does an order take?",
+      a: "Kitchens are usually designed and installed in 10 to 15 days once the design and quote are approved. For furniture, we confirm the delivery date in your quote, depending on the piece.",
     },
     {
       q: "Do you visit to take measurements?",

@@ -66,8 +66,8 @@ export function SettingsForm({ initial }: { initial: Settings }) {
     <form onSubmit={submit} className="mt-6 space-y-6" noValidate>
       <Section title="Business">
         {text("businessName", "Business name", { hint: "Shown in the header, footer, page titles and Google results." })}
-        {text("tagline", "Short tagline", { placeholder: "Beautiful kitchens. Fast delivery. Affordable prices." })}
-        {text("city", "City you serve", { hint: "Used in headings like “Kitchens and furniture in Karachi”." })}
+        {text("tagline", "Short tagline", { placeholder: "Beautiful furniture. Fast delivery. Affordable prices." })}
+        {text("city", "City you serve", { hint: "Used in headings like “Furniture and interiors in Karachi”." })}
       </Section>
 
       <Section title="Contact">

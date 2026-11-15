@@ -9,11 +9,11 @@ const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], dis
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "Earth Interior | Kitchens and Custom Furniture",
+    default: "Earth Interior | Custom Furniture and Interiors",
     template: "%s | Earth Interior",
   },
   description:
-    "Modern kitchens, wardrobes and custom furniture, designed and installed to your size and budget.",
+    "Custom sofas, beds, wardrobes, dining sets, kitchens and interiors, made to your size and budget.",
 };
 
 export const viewport: Viewport = {
