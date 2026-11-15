@@ -5,7 +5,8 @@ import { whatsappLink } from "@/lib/whatsapp";
 import type { Settings } from "@/lib/types";
 
 const NAV = [
-  { href: "/furniture", label: "Furniture" },
+  { href: "/portfolio", label: "Our work" },
+  { href: "/furniture", label: "Designs" },
   { href: "/#how-it-works", label: "How it works" },
   { href: "/#faq", label: "FAQ" },
   { href: "/#visit", label: "Visit us" },

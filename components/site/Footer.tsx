@@ -11,7 +11,7 @@ export function Footer({ settings }: { settings: Settings }) {
       <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
           <p className="font-display text-2xl font-semibold">{settings.businessName}</p>
-          <p className="mt-2 max-w-sm text-muted">{settings.tagline}. Every piece is made to order in our workshop and checked by hand before delivery.</p>
+          <p className="mt-2 max-w-sm text-muted">{settings.tagline}. Kitchens, wardrobes and custom furniture, designed and installed for homes in {settings.city}.</p>
           <ul className="mt-5 space-y-2 text-sm">
             <li className="flex gap-2">
               <MapPin size={16} className="mt-0.5 shrink-0 text-primary" aria-hidden />
@@ -26,6 +26,14 @@ export function Footer({ settings }: { settings: Settings }) {
               <a href={`tel:${settings.phone}`} className="hover:text-primary hover:underline">
                 {displayPkPhone(settings.phone)}
               </a>
+              {settings.altPhone && (
+                <>
+                  {" · "}
+                  <a href={`tel:${settings.altPhone}`} className="hover:text-primary hover:underline">
+                    {displayPkPhone(settings.altPhone)}
+                  </a>
+                </>
+              )}
             </li>
             <li className="flex gap-2">
               <MessageCircle size={16} className="mt-0.5 shrink-0 text-primary" aria-hidden />
@@ -55,9 +63,10 @@ export function Footer({ settings }: { settings: Settings }) {
         <div>
           <p className="text-sm font-semibold">Company</p>
           <ul className="mt-3 space-y-2 text-sm text-muted">
+            <li><Link href="/portfolio" className="hover:text-primary">Our work</Link></li>
             <li><Link href="/#how-it-works" className="hover:text-primary">How it works</Link></li>
             <li><Link href="/#faq" className="hover:text-primary">Questions</Link></li>
-            <li><Link href="/#visit" className="hover:text-primary">Visit the workshop</Link></li>
+            <li><Link href="/#visit" className="hover:text-primary">Visit our office</Link></li>
             {settings.mapUrl && (
               <li>
                 <a href={settings.mapUrl} target="_blank" rel="noopener noreferrer" className="hover:text-primary">

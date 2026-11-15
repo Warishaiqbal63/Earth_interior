@@ -56,3 +56,18 @@ test("settings: phone normalized, required business name", () => {
   assert.equal(validateSettings({ ...DEFAULT_SETTINGS, businessName: "" }).ok, false);
   assert.equal(validateSettings({ ...DEFAULT_SETTINGS, phone: "nope" }).ok, false);
 });
+
+test("settings: optional second phone is normalised, junk rejected", () => {
+  const ok = validateSettings({ ...DEFAULT_SETTINGS, altPhone: "0300-2788525" });
+  assert.equal(ok.ok && ok.value.altPhone, "+923002788525");
+  const empty = validateSettings({ ...DEFAULT_SETTINGS, altPhone: "" });
+  assert.equal(empty.ok && empty.value.altPhone, "");
+  assert.equal(validateSettings({ ...DEFAULT_SETTINGS, altPhone: "123" }).ok, false);
+});
+
+test("default settings are the real Karachi business details and pass validation", () => {
+  assert.equal(DEFAULT_SETTINGS.city, "Karachi");
+  assert.equal(DEFAULT_SETTINGS.phone, "+923333388646");
+  assert.equal(DEFAULT_SETTINGS.altPhone, "+923002788525");
+  assert.equal(validateSettings(DEFAULT_SETTINGS).ok, true);
+});

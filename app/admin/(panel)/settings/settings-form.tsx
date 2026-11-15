@@ -66,13 +66,14 @@ export function SettingsForm({ initial }: { initial: Settings }) {
     <form onSubmit={submit} className="mt-6 space-y-6" noValidate>
       <Section title="Business">
         {text("businessName", "Business name", { hint: "Shown in the header, footer, page titles and Google results." })}
-        {text("tagline", "Short tagline", { placeholder: "Custom furniture, made in Lahore" })}
-        {text("city", "City you serve", { hint: "Used in headings like “Made to order in Lahore”." })}
+        {text("tagline", "Short tagline", { placeholder: "Beautiful kitchens. Fast delivery. Affordable prices." })}
+        {text("city", "City you serve", { hint: "Used in headings like “Kitchens and furniture in Karachi”." })}
       </Section>
 
       <Section title="Contact">
         {text("phone", "Phone number", { type: "tel", inputMode: "tel", placeholder: "0300 1234567", hint: "Mobile or landline. Used for every “Call” button." })}
         {text("whatsapp", "WhatsApp number", { type: "tel", inputMode: "tel", placeholder: "0300 1234567", hint: "Must be a mobile number with WhatsApp." })}
+        {text("altPhone", "Second phone (optional)", { type: "tel", inputMode: "tel", placeholder: "0300 2788525", hint: "Shown next to the main number in the footer and contact section." })}
         {text("email", "Email (optional)", { type: "email" })}
       </Section>
 
@@ -102,7 +103,7 @@ export function SettingsForm({ initial }: { initial: Settings }) {
           <div key={i} className="grid gap-3 rounded-lg border border-line p-3 sm:grid-cols-2">
             <input aria-label={`Testimonial ${i + 1} name`} placeholder="Customer name" value={t.name} className="input"
               onChange={(e) => set("testimonials", form.testimonials.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))} />
-            <input aria-label={`Testimonial ${i + 1} area`} placeholder="Area, e.g. DHA Lahore" value={t.area} className="input"
+            <input aria-label={`Testimonial ${i + 1} area`} placeholder="Area, e.g. DHA Karachi" value={t.area} className="input"
               onChange={(e) => set("testimonials", form.testimonials.map((x, j) => (j === i ? { ...x, area: e.target.value } : x)))} />
             <textarea aria-label={`Testimonial ${i + 1} quote`} placeholder="What they said" rows={2} value={t.quote} className="input sm:col-span-2"
               onChange={(e) => set("testimonials", form.testimonials.map((x, j) => (j === i ? { ...x, quote: e.target.value } : x)))} />

@@ -9,7 +9,7 @@ export const SAMPLE_PRODUCTS: ProductInput[] = [
     price: 285000,
     compareAtPrice: 320000,
     description:
-      "A mid-century dining table in solid walnut with six upholstered chairs. Made to order in our Lahore workshop, so the table length, polish shade and chair fabric can be changed to suit your dining room.",
+      "A mid-century dining table in solid walnut with six upholstered chairs. Made to order in our workshop, so the table length, polish shade and chair fabric can be changed to suit your dining room.",
     dimensions: "Table: 72 × 36 × 30 in",
     features: ["Solid walnut top and legs", "Six cushioned chairs", "Choice of polish and fabric", "Custom lengths available"],
     images: [{ url: "/samples/euclid-mid-century-walnut-dining-set.webp", alt: "Walnut dining table with six upholstered chairs", width: 1000, height: 1000 }],

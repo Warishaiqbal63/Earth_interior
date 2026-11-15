@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const used = CATEGORIES.filter((c) => products.some((p) => p.category === c));
   return [
     { url: `${base}/`, lastModified: latest, changeFrequency: "weekly", priority: 1 },
+    { url: `${base}/portfolio`, lastModified: latest, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/furniture`, lastModified: latest, changeFrequency: "weekly", priority: 0.9 },
     ...used.map((c) => ({
       url: `${base}/furniture?category=${encodeURIComponent(c)}`,

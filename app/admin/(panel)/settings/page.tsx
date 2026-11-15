@@ -12,7 +12,7 @@ export default async function SettingsPage() {
     <>
       <h1 className="text-2xl font-semibold sm:text-3xl">Settings</h1>
       <p className="mt-1 text-muted">Business details shown across the website. Changes go live as soon as you save.</p>
-      <SettingsForm initial={{ ...s, phone: displayPkPhone(s.phone), whatsapp: displayPkPhone(s.whatsapp) }} />
+      <SettingsForm initial={{ ...s, phone: displayPkPhone(s.phone), whatsapp: displayPkPhone(s.whatsapp), altPhone: s.altPhone ? displayPkPhone(s.altPhone) : "" }} />
     </>
   );
 }

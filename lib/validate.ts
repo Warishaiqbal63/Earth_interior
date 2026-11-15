@@ -160,6 +160,9 @@ export function validateSettings(input: unknown): ValidationResult<Settings> {
   const whatsapp = normalizePkPhone(str(d.whatsapp));
   if (!whatsapp || !/^\+923\d{9}$/.test(whatsapp))
     errors.whatsapp = "Enter a Pakistani mobile number that has WhatsApp, e.g. 0300 1234567.";
+  const altRaw = str(d.altPhone);
+  const altPhone = altRaw ? normalizePkPhone(altRaw) : "";
+  if (altPhone === null) errors.altPhone = "Enter a Pakistani number, or leave it empty.";
   const email = str(d.email);
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = "Enter a valid email, or leave it empty.";
   const addressStreet = need("addressStreet", "street address");
@@ -194,6 +197,7 @@ export function validateSettings(input: unknown): ValidationResult<Settings> {
       city,
       phone: phone!,
       whatsapp: whatsapp!,
+      altPhone: altPhone ?? "",
       email,
       addressStreet,
       addressArea,

@@ -52,6 +52,8 @@ export type Settings = {
   city: string;
   phone: string;
   whatsapp: string;
+  /** Optional second number, shown next to the main one. */
+  altPhone: string;
   email: string;
   addressStreet: string;
   addressArea: string;
@@ -84,26 +86,27 @@ export type ValidationResult<T> =
 /** Starting content. Every field is editable in Admin → Settings. */
 export const DEFAULT_SETTINGS: Settings = {
   businessName: "Earth Interior",
-  tagline: "Custom furniture, made in Lahore",
-  city: "Lahore",
-  phone: "+923001234567",
-  whatsapp: "+923001234567",
+  tagline: "Beautiful kitchens. Fast delivery. Affordable prices.",
+  city: "Karachi",
+  phone: "+923333388646",
+  whatsapp: "+923333388646",
+  altPhone: "+923002788525",
   email: "",
-  addressStreet: "12 Workshop Road",
-  addressArea: "Gulberg III",
-  addressCity: "Lahore",
-  mapUrl: "https://maps.google.com/?q=Gulberg+III+Lahore",
+  addressStreet: "Office 303, 3rd Floor, Building 1C, 7th Zamzama",
+  addressArea: "DHA",
+  addressCity: "Karachi",
+  mapUrl: "https://maps.google.com/?q=7th+Zamzama+Commercial+Lane+DHA+Karachi",
   hours: "Monday to Saturday, 10am to 8pm",
   trustPoints: [
-    "Free home measurement in Lahore",
-    "Built to your size, wood and fabric",
-    "Visit the workshop before you order",
-    "1-year workmanship warranty",
+    "Kitchens designed and installed in 10 to 15 days",
+    "Premium finishes at an affordable price",
+    "Built to your size, colour and budget",
+    "Professional workmanship, start to finish",
   ],
   testimonials: [
     {
       name: "Sample customer",
-      area: "DHA, Lahore",
+      area: "DHA, Karachi",
       quote: "Replace this with a real quote from a customer in Admin → Settings.",
     },
   ],
@@ -113,12 +116,12 @@ export const DEFAULT_SETTINGS: Settings = {
       a: "Yes. Everything is made to order, so we can change size, wood, polish and fabric to fit your room.",
     },
     {
-      q: "How long does an order take?",
-      a: "Most pieces take 3 to 5 weeks from approved design to delivery, depending on size and finish.",
+      q: "How long does a kitchen take?",
+      a: "Most kitchens are designed and installed in 10 to 15 days once the design and quote are approved.",
     },
     {
       q: "Do you visit to take measurements?",
-      a: "Yes. We visit homes in Lahore to measure and discuss the design before giving a final quote.",
+      a: "Yes. We visit homes in Karachi to measure and discuss the design before giving a final quote.",
     },
     {
       q: "How do I pay?",
